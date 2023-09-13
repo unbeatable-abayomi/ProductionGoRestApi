@@ -24,7 +24,7 @@ func (app *App) Run() error{
 }
 
 func main(){
-	fmt.Println("Go Rest API Coures")
+	fmt.Println("Go Rest API Course")
 	app := App{}
 	if err := app.Run(); err != nil {
        fmt.Println("Error starting Our RestApi");
