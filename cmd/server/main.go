@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	transportHTTP "github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http"
-	//transportHTTP "/internal/transport/http"
 )
 
-//App struct wjich contains things like pointers
-//to database connections
+//App struct wjich contains things like pointers to database connections
 type App struct{}
 
 func (app *App) Run() error{
