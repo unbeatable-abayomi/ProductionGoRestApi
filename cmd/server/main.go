@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+
 	transportHTTP "github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http"
+	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http/database"
 )
 
 //App struct wjich contains things like pointers to database connections
@@ -11,6 +13,12 @@ type App struct{}
 
 func (app *App) Run() error{
     fmt.Println("Setting Up Our App");
+
+	var err error
+	_, err = database.NewDataBase()
+	if err != nil {
+		   return err
+	}
 	handler := transportHTTP.NewHandler();
 	handler.SetUpRoutes();
 
