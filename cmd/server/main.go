@@ -15,7 +15,7 @@ func (app *App) Run() error{
 	handler.SetUpRoutes();
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil{
-        fmt.Println("Falied to set up server")
+        fmt.Println("Failed to set up server")
 		return err; 
 	}
 	return nil;                               
