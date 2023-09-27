@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/comment"
 	transportHTTP "github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http"
 	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http/database"
 )
@@ -15,11 +16,16 @@ func (app *App) Run() error{
     fmt.Println("Setting Up Our App");
 
 	var err error
-	_, err = database.NewDataBase()
+	db, err := database.NewDataBase()
 	if err != nil {
 		   return err
 	}
-	handler := transportHTTP.NewHandler();
+    err = database.MigrateDB(db)
+	if err != nil {
+		return err
+	}
+	commentService := comment.NewService(db);
+	handler := transportHTTP.NewHandler(commentService);
 	handler.SetUpRoutes();
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil{

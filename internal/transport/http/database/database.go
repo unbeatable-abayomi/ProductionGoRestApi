@@ -23,7 +23,7 @@ if err != nil {
 	 return db, err
 }
 if err:= db.DB().Ping(); err != nil{
-	return  db,                               err
+	return  db,err
 }
-	return nil, nil
+	return db, nil
 }
