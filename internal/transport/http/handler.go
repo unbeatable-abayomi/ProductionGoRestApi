@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -15,6 +16,10 @@ type Handler struct{
   Service *comment.Service
 }
 
+//Response --- an object to store responses from our APIs
+type Reponse struct{
+	Message string
+}
 
 //NewHandler - returns a pointer to a Handler                                         
 func NewHandler(service *comment.Service) *Handler{
@@ -32,7 +37,12 @@ func(h *Handler) SetUpRoutes() {
 	h.Router.HandleFunc("/api/comment/{id}",h.DeleteComment).Methods("DELETE")
 	
 	h.Router.HandleFunc("/api/health", func (w http.ResponseWriter, r *http.Request)  {
-	  fmt.Fprintf(w, "I am alive");	
+	  //fmt.Fprintf(w, "I am alive");	
+	  w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	  w.WriteHeader(http.StatusOK)
+	  if err := json.NewEncoder(w).Encode(Reponse{Message: "I am Alive"}); err != nil{
+		panic(err)
+	  }
 	})
 } 
 
