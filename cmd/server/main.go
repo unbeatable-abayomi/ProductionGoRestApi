@@ -9,7 +9,7 @@ import (
 	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http/database"
 )
 
-//App struct wjich contains things like pointers to database connections
+//App struct which contains application information
 type App struct{}
 
 func (app *App) Run() error{
