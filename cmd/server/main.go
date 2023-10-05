@@ -6,7 +6,7 @@ import (
 
 	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/comment"
 	transportHTTP "github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http"
-	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/transport/http/database"
+	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/database"
     log	"github.com/sirupsen/logrus"
 )     
 
