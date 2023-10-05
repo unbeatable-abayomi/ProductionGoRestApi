@@ -28,6 +28,11 @@ func NewHandler(service *comment.Service) *Handler{
 	return &Handler{Service: service }
 }
 
+//BasicAuth - a handy middleware function that will provide basic auth around specific endpoint
+func BasicAuth(original func(w http.ResponseWriter, r *http.Request)){
+	
+}
+
 //LoggingMiddleware - adds middleware around endpionts
 func LoggingMiddleware(next http.Handler) http.Handler{
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
