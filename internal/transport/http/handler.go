@@ -2,13 +2,14 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
-	_"strconv"
+	_ "strconv"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	"github.com/unbeatable-abayomi/ProductionGoRestApi/internal/comment"
-	log	"github.com/sirupsen/logrus"
 )
 
 //Handler - stores pointer to our comments service
@@ -26,6 +27,21 @@ type Reponse struct{
 //NewHandler - returns a pointer to a Handler                                         
 func NewHandler(service *comment.Service) *Handler{
 	return &Handler{Service: service }
+}
+
+//BasicAuth - a handy middleware function that will provide basic auth around specific endpoint
+func BasicAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+  return func(w http.ResponseWriter, r *http.Request){
+	log.Info("Basic auth endpoint hit")
+	user, pass, ok := r.BasicAuth()
+	    if user == "admin" && pass == "password" && ok {
+			original(w,r)
+		}else{
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			sendErrorResponse(w,"not authorized", errors.New("Not Authorized"))
+		}                                                                                                                 
+	
+  }           
 }
 
 //LoggingMiddleware - adds middleware around endpionts
@@ -48,10 +64,10 @@ func(h *Handler) SetUpRoutes() {
 	h.Router = mux.NewRouter()
 	h.Router.Use(LoggingMiddleware)
 	h.Router.HandleFunc("/api/comment",h.GetAllComments).Methods("GET")
-	h.Router.HandleFunc("/api/comment",h.PostComment).Methods("POST")
+	h.Router.HandleFunc("/api/comment",BasicAuth(h.PostComment)).Methods("POST")
 	h.Router.HandleFunc("/api/comment/{id}",h.GetComment).Methods("GET")
-	h.Router.HandleFunc("/api/comment/{id}",h.UpdateComment).Methods("PUT")
-	h.Router.HandleFunc("/api/comment/{id}",h.DeleteComment).Methods("DELETE")
+	h.Router.HandleFunc("/api/comment/{id}",BasicAuth(h.UpdateComment)).Methods("PUT")
+	h.Router.HandleFunc("/api/comment/{id}",BasicAuth(h.DeleteComment)).Methods("DELETE")
 	
 	h.Router.HandleFunc("/api/health", func (w http.ResponseWriter, r *http.Request)  {
 	  //fmt.Fprintf(w, "I am alive");	
